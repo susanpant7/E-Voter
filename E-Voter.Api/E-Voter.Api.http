@@ -1,0 +1,6 @@
+@E_Voter.Api_HostAddress = http://localhost:5244
+
+GET {{E_Voter.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
