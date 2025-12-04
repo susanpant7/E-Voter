@@ -4,6 +4,14 @@
 ✔ POST → Create Voter
 API → Application → Infrastructure → Database
 
+domain has the entity (tables)
+api has controllers
+application has the services (business logic), DTO
+    service class calls IRepository class
+    does not know the implementation of IRepository class
+infrastructure has the implementation of IRepository class ie Repository class
+
+
 ## 🚀 How Each Layer Works (Simple)
 
 API
@@ -34,7 +42,7 @@ Value objects
 Repository interfaces (e.g., IVoterRepository)
 
 2. Application
-→ Handler validates and performs business logic
+→ Handler validates and performs business logic, has services
 → Calls IVoterRepository.AddAsync()
 Depends on: Domain
 Contains the use cases and business logic:
@@ -59,3 +67,10 @@ The entry point of the application:
 Controllers / Endpoints
 Dependency Injection configuration
 Swagger
+
+
+## -------------------------------------------
+DB Migration
+## -------------------------------------------
+dotnet ef migrations add InitialCreate -p src/E-Voter.Infrastructure -s src/E-Voter.Api
+dotnet ef database update -p src/E-Voter.Infrastructure -s src/E-Voter.Api
