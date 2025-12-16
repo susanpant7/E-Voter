@@ -73,3 +73,10 @@ export default defineConfig([
   },
 ])
 ```
+Major packages used in the app:
+
+1. TanStack Router: For routes and protection.
+2. Axios: For API calls to your .NET backend.
+3. jwt-decode: To check if token is expired without server calls.
+4. Tailwind: For easy styling.
+5. React Query: For data fetching

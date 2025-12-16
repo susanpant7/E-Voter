@@ -12,6 +12,8 @@ obj/
 *.vs
 .vscode/
 *.db
+BuildHost-net472/
+BuildHost-netcore/
 
 # macOS
 .DS_Store

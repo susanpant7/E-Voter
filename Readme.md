@@ -33,9 +33,8 @@ The system is split into four projects, each with a clear responsibility.
 
 ## 🧱 Project Structure
 1. Domain
-→ Holds the Voter entity and business rules
-Depends on: No one
-Contains the core business rules:
+→ Holds the Voter entity and business rules.
+Depends on: No oneContains the core business rules:
 Entities (e.g., Voter)
 Enums
 Value objects
@@ -68,6 +67,58 @@ Controllers / Endpoints
 Dependency Injection configuration
 Swagger
 
+## ################################################
+eVoter.Domain/
+├── Entities/
+│   ├── Voter.cs
+│   ├── Candidate.cs
+│   └── Vote.cs
+├── Interfaces/
+│   ├── Repositories/
+│   │   ├── IVoterRepository.cs
+│   │   ├── ICandidateRepository.cs
+│   │   └── IVoteRepository.cs
+│   └── IUnitOfWork.cs
+└── Common/
+└── BaseEntity.cs (optional)
+
+eVoter.Infrastructure/
+├── Data/
+│   ├── ApplicationDbContext.cs
+│   └── Migrations/
+├── Repositories/
+│   ├── VoterRepository.cs
+│   ├── CandidateRepository.cs
+│   └── VoteRepository.cs
+├── UnitOfWork/
+│   └── UnitOfWork.cs  ⭐ (Implementation goes here)
+└── DependencyInjection.cs (optional - for registering services)
+
+eVoter.Application/
+├── Services/
+│   ├── Interfaces/
+│   │   ├── IVoterService.cs
+│   │   ├── ICandidateService.cs
+│   │   └── IVoteService.cs
+│   └── Implementations/
+│       ├── VoterService.cs
+│       ├── CandidateService.cs
+│       └── VoteService.cs
+├── DTOs/
+│   ├── VoterDto.cs
+│   ├── CreateVoterDto.cs
+│   └── UpdateVoterDto.cs
+└── Validators/ (optional)
+└── CreateVoterValidator.cs
+
+eVoter.Api/
+├── Controllers/
+│   ├── VoterController.cs
+│   ├── CandidateController.cs
+│   └── VoteController.cs
+├── Program.cs
+└── appsettings.json
+## ################################################
 
 ## -------------------------------------------
 DB Migration

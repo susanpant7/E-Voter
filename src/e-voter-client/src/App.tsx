@@ -1,13 +1,17 @@
 import './App.css'
 
+import {RouterProvider, createRouter, Router} from '@tanstack/react-router';
+import {routeTree} from "./app/routeTree.gen.ts";
+
+const router = createRouter({ routeTree });
+
+declare module '@tanstack/react-router' {
+    interface Register {
+        router: typeof Router;
+    }
+}
 function App() {
-  return (
-      <>
-          <h1 className="text-3xl font-bold underline">
-              E-Voter Client!
-          </h1>
-      </>
-  )
+    return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;

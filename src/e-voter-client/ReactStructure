@@ -1,0 +1,84 @@
+src/
+├── app/
+│   └── routes/          // All pages go here
+│       ├── __root.tsx   // Main guard for whole app
+│       ├── index.tsx    // Public home page (unprotected)
+│       └── dashboard/   // Protected example
+│           └── index.tsx
+├── lib/
+│   └── api/
+│       └── axios.ts     // Secure API setup
+├── components/
+│   └── ui/              // Reusable buttons, etc. (add later)
+├── main.tsx             // Entry point
+└── App.tsx              // Router setup
+
+
+
+
+
+src/
+├── app/                     # TanStack Router / App Router (recommended)
+│   ├── routes/              # All routes (file-based routing)
+│   │   ├── __root.tsx       # Root layout + error boundary
+│   │   ├── index.tsx        # Default page → Redirect to /login or /dashboard
+│   │   ├── login.tsx        # OTP Login page (public)
+│   │   ├── dashboard/       
+│   │   │   ├── index.tsx    # Voter dashboard (protected)
+│   │   │   └── elections.tsx
+│   │   ├── vote/
+│   │   │   └── [electionId].tsx
+│   │   └── admin/
+│   │       └── index.tsx    # Admin panel (role-protected)
+│   └── router.tsx           # Router setup (if not using file-based)
+│
+├── components/              # Reusable UI components
+│   ├── ui/                  # Shadcn/ui or custom (Button, Card, Input, etc.)
+│   │   ├── button.tsx
+│   │   ├── input.tsx
+│   │   └── otp-input.tsx
+│   ├── layout/
+│   │   ├── header.tsx
+│   │   ├── footer.tsx
+│   │   └── sidebar.tsx
+│   └── forms/
+│       └── phone-input.tsx
+│
+├── features/                # Feature modules (recommended for large apps)
+│   └── auth/
+│       ├── components/
+│       │   └── otp-login-form.tsx
+│       ├── hooks/
+│       │   └── use-auth.ts
+│       └── api/
+│           └── auth-api.ts
+│
+├── lib/                     # Utilities & third-party wrappers
+│   ├── api/                 # Axios instance + interceptors (BEST PLACE)
+│   │   ├── axios.ts         # ← AXIOS INSTANCE + INTERCEPTORS HERE
+│   │   └── instance.ts
+│   ├── utils.ts
+│   └── cn.ts                # className merge utility (clsx + tailwind-merge)
+│
+├── hooks/                   # Custom React hooks
+│   ├── use-otp-timer.ts
+│   └── use-protected-route.ts
+│
+├── store/                   # State management (Zustand / Jotai / Context)
+│   ├── auth-store.ts        # Global auth state
+│   └── voter-store.ts
+│
+├── types/                   # Global TypeScript types
+│   ├── auth.ts
+│   └── api.ts
+│
+├── constants/
+│   └── routes.ts            # Named routes for navigation
+│
+├── assets/
+│   ├── images/
+│   └── icons/
+│
+├── App.tsx                  # Main App wrapper
+├── main.tsx                 # Entry point (React 19 root)
+└── vite-env.d.ts
