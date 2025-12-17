@@ -13,6 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\E-Voter.Application\E-Voter.Application.csproj" />
       <ProjectReference Include="..\E-Voter.Domain\E-Voter.Domain.csproj" />
     </ItemGroup>
 

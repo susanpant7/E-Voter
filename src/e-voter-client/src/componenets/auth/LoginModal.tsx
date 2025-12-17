@@ -1,6 +1,6 @@
 import {type FormEvent, useState} from 'react';
-import type {LoginPayload} from "../../api/auth/authType.ts";
 import {loginApi} from "../../api/auth/auth.ts";
+import type {LoginPayload} from "../../api/auth/auth.types.ts";
 
 interface LoginModalProps {
     isOpen: boolean;

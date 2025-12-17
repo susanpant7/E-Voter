@@ -1,32 +1,28 @@
-import {
-    AuthLoginEndpoint,
-    type LoginPayload,
-    type LoginResponse,
-    AuthLogoutEndpoint
-} from "./authType.ts";
-import {privateAuthApi, publicAuthApi} from "../../auth/authProvider.ts";
-import {useAuthStore} from "../../stores/authStore.ts";
+import {useAuthStore, type User} from "../../stores/authStore.ts";
+import {showSuccessNotification} from "../../componenets/UI/Toast.tsx";
+import type {LoginPayload} from "./auth.types.ts";
+import eVoterApi from "../e-voter-api.ts";
+import {EndPoints} from "../endpoint-routes.ts";
 
-export async function loginApi(payload: LoginPayload): Promise<void> {
+export async function loadCurrentUser() {
+    const { setUser } = useAuthStore.getState();
+    
     try {
-        const { data } = await publicAuthApi.post<LoginResponse>(AuthLoginEndpoint, payload);
-        if (!data.success) {
-            throw new Error(data.title || 'Login failed');
-        }
-        useAuthStore.getState().login(data.data.accessToken);
-    } catch (err: any) {
-        throw new Error(err.response?.data?.message || 'Login failed');
+        const user:User = await eVoterApi.get(EndPoints.GetUserInfo);
+        setUser(user);
+    } catch (err) {
+        setUser(null);
     }
 }
 
-export async function logoutApi() {
-    try {
-        await privateAuthApi.post(AuthLogoutEndpoint);
-    } catch (err: any) {
-        throw new Error(err.response?.data?.message || 'Issue on logout');
-    } finally {
-        useAuthStore.getState().logout();
-        // localStorage.clear();
-        window.location.href = "/";
-    }
+export async function loginApi(payload: LoginPayload): Promise<void> {
+    await eVoterApi.post(EndPoints.Login, payload)
+    await loadCurrentUser();
+    showSuccessNotification("Login successfully");
+}
+
+export const logoutApi = async () : Promise<void> => {
+    await eVoterApi.post(EndPoints.Logout, {});
+    useAuthStore.getState().setUser(null);
+    showSuccessNotification("Logout successfully");
 }

@@ -1,23 +1,29 @@
-import {createFileRoute, redirect, Outlet, useParams} from '@tanstack/react-router';
-import {getToken} from "../../auth/authProvider.ts";
+import {createFileRoute, Outlet, redirect} from '@tanstack/react-router';
+import {useAuthStore} from "../../stores/authStore.ts";
 
 export const Route = createFileRoute('/_protected')({
+    // This runs before the component (or any child route) is loaded
     beforeLoad: async () => {
-        const params = useParams({from:'/'});
-        const target = params.target;
-        console.log("...>>>>"+target);
-        const token = await getToken();
-
-        if (!token) {
+        const user = useAuthStore.getState().user;
+        if (!user) {
             throw redirect({
                 to: '/',
-            });
+            })
         }
     },
 
-    component: () => (
-        <div className="protected-layout">
-            <Outlet />
-        </div>
-    ),
+    component: ProtectedLayout,
 });
+
+function ProtectedLayout() {
+    return (
+        <div className="protected-layout flex flex-col min-h-screen">
+            {/* You can add protected-only UI here, like a 
+                Sidebar or a User-specific dashboard header.
+            */}
+            <div className="container mx-auto px-4 py-6">
+                <Outlet />
+            </div>
+        </div>
+    );
+}

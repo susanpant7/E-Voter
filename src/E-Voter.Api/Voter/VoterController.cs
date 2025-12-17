@@ -1,5 +1,5 @@
-using E_Voter.Api.Common;
 using E_Voter.Api.Security;
+using E_Voter.Application.Shared;
 using E_Voter.Application.Voter;
 using Microsoft.AspNetCore.Mvc;
 

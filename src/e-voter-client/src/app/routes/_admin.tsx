@@ -1,19 +1,9 @@
-import {createFileRoute, Outlet, redirect} from '@tanstack/react-router'
-import {getToken} from "../../auth/authProvider.ts";
-import {userIsAdmin} from "../../auth/jwt.ts";
+import {createFileRoute, Outlet} from '@tanstack/react-router'
+import {adminGuard} from "../../utils/auth-guards.ts";
 
 export const Route = createFileRoute('/_admin')({
   component: RouteComponent,
-  beforeLoad: async () => {
-    const token = await getToken();
-    
-    if (!token) {
-      throw redirect({
-        to: '/',
-      });
-    }
-    
-  },
+  beforeLoad: ({ location }) => adminGuard(location)
 })
 
 function RouteComponent() {

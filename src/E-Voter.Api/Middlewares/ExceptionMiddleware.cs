@@ -1,7 +1,7 @@
 using System.Text.Json;
-using E_Voter.Api.Common;
 using E_Voter.Api.Configuration;
 using E_Voter.Api.utils;
+using E_Voter.Application.Shared;
 
 namespace E_Voter.Api.Middlewares;
 

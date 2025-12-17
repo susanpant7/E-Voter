@@ -79,22 +79,15 @@ eVoter.Domain/
 │   │   ├── ICandidateRepository.cs
 │   │   └── IVoteRepository.cs
 │   └── IUnitOfWork.cs
+└── Enums/
 └── Common/
 └── BaseEntity.cs (optional)
 
-eVoter.Infrastructure/
-├── Data/
-│   ├── ApplicationDbContext.cs
-│   └── Migrations/
-├── Repositories/
-│   ├── VoterRepository.cs
-│   ├── CandidateRepository.cs
-│   └── VoteRepository.cs
-├── UnitOfWork/
-│   └── UnitOfWork.cs  ⭐ (Implementation goes here)
-└── DependencyInjection.cs (optional - for registering services)
-
+application-specific business logic
 eVoter.Application/
+├── Commands/
+├── Queries/
+├── Handlers/
 ├── Services/
 │   ├── Interfaces/
 │   │   ├── IVoterService.cs
@@ -110,6 +103,24 @@ eVoter.Application/
 │   └── UpdateVoterDto.cs
 └── Validators/ (optional)
 └── CreateVoterValidator.cs
+
+eVoter.Infrastructure/
+├── Data/
+│   ├── ApplicationDbContext.cs
+│   └── Migrations/
+├── Repositories/
+│   ├── VoterRepository.cs
+│   ├── CandidateRepository.cs
+│   └── VoteRepository.cs
+├── UnitOfWork/
+│   └── UnitOfWork.cs  ⭐ (Implementation goes here)
+├── External Service Implementations/
+│   ├── EmailServices/: Implementations for sending emails (e.g., SmtpEmailService.cs`).
+│   ├── CFileStorageServices/: Implementations for cloud storage (e.g., AzureBlobStorageService.cs`).
+│   └── IdentityServices/: Implementations for identity providers (e.g., JwtBearerAuthentication.cs`).
+│   └── MessageQueueClients/: Implementations for message brokers (e.g., RabbitMqServiceBus.cs`).
+└── Classes for reading settings from appsettings.jsonrelated to infrastructure (e.g.,DatabaseSettings.cs`).
+└── InfrastructureConfig.cs (optional - for registering services)
 
 eVoter.Api/
 ├── Controllers/

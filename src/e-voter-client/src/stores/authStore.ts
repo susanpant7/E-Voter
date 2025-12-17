@@ -1,21 +1,23 @@
 import { create } from 'zustand';
 
+export type User = {
+    id: string
+    email: string
+    roles: string[]
+}
+
 type AuthState = {
-    token: string | null;
-    login: (token: string) => void;
-    logout: () => void;
+    user: User | null;
+    isAuthenticated: boolean;
+    setUser: (user: User | null) => void;
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
-    token: null,
-
-    login: (token) =>
-        set(() => ({
-            token,
-        })),
-
-    logout: () =>
-        set(() => ({
-            token: null,
-        })),
+    user: null,
+    isAuthenticated: false,
+    setUser: (user) =>
+        set({
+            user,
+            isAuthenticated: !!user,
+        }),
 }));
