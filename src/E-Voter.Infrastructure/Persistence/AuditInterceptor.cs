@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using E_Voter.Domain;
+using E_Voter.Domain.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;

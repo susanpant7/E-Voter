@@ -12,6 +12,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Ward> Wards => Set<Ward>();
     public DbSet<VotingPlace> VotingPlaces => Set<VotingPlace>();
     public DbSet<Voter> Voters => Set<Voter>();
+    public DbSet<ElectionParty> ElectionParties => Set<ElectionParty>();
+    public DbSet<MediaFile> MediaFiles => Set<MediaFile>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -21,11 +23,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         ConfigureManyToManyEntities(modelBuilder);
-
+        FluentApiDbConstraints.ConfigureDbConstraints(modelBuilder);
         base.OnModelCreating(modelBuilder);
 
         SeedDemographicPlaceData.Add(modelBuilder);
         SeedVoterData.Add(modelBuilder);
+        SeedElectionPartyData.Add(modelBuilder);
     }
 
     private static void ConfigureManyToManyEntities(ModelBuilder modelBuilder)

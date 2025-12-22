@@ -1,3 +1,5 @@
+using E_Voter.Application.ElectionParties;
+using E_Voter.Application.MediaFiles;
 using E_Voter.Application.Voter;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +11,8 @@ public static class ApplicationConfig
     {
         // Services
         services.AddScoped<IVoterService, VoterService>();
+        services.AddScoped<IElectionPartyService, ElectionPartyService>();
+        services.AddScoped<IMediaFileService, MediaFileService>();
 
         return services;
     }

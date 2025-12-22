@@ -1,4 +1,5 @@
 using E_Voter.Domain;
+using E_Voter.Domain.Common;
 using E_Voter.Domain.IRepositories;
 using E_Voter.Infrastructure.Persistence;
 using E_Voter.Infrastructure.Repositories;
@@ -19,9 +20,11 @@ public static class InfrastructureConfig
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString));
         services.AddScoped<AuditInterceptor>();
-        
+
         // Register Repositories
         services.AddScoped<IVoterRepository, VoterRepository>();
+        services.AddScoped<IElectionPartyRepository, ElectionPartyRepository>();
+        services.AddScoped<IMediaFileRepository, MediaFileRepository>();
 
         // Register UnitOfWork
         services.AddScoped<IUnitOfWork, UnitOfWork>();

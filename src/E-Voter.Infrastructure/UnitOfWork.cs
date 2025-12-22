@@ -1,4 +1,4 @@
-using E_Voter.Domain;
+using E_Voter.Domain.Common;
 using E_Voter.Infrastructure.Persistence;
 
 namespace E_Voter.Infrastructure;

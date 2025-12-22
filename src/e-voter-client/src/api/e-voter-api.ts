@@ -1,12 +1,12 @@
 import axios from 'axios';
-import {showErrorNotification} from "../componenets/UI/Toast.tsx";
+import {showErrorNotification, showSuccessNotification} from "../componenets/UI/Toast.tsx";
 import {EndPoints} from "./endpoint-routes.ts";
 import type {ApiResponse} from "./api-response.ts";
 
 const eVoterApi = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5244',
-    headers: { 'Content-Type': 'application/json' },
-    timeout: 10000,
+    //headers: { 'Content-Type': 'application/json' },
+    //timeout: 10000,
     withCredentials: true,
 });
 
@@ -33,6 +33,14 @@ eVoterApi.interceptors.response.use(
                 return Promise.reject(new Error(errorMessage));
             }
 
+            // ✅ Show success notification for non-GET requests
+            const method = response.config.method?.toLowerCase();
+            const isNonGet = method && method !== "get";
+
+            if (isNonGet && data.title) {
+                showSuccessNotification(data.title);
+            }
+            
             return data.data;
         }
 
@@ -50,7 +58,7 @@ eVoterApi.interceptors.response.use(
                 if (isApiResponse(data)) {
                     showErrorNotification(data.title || `Error: ${status}`);
                 } else {
-                    showErrorNotification(`Request failed with status ${status}`);
+                    showErrorNotification(data?.title || `Request failed with status ${status}`);
                 }
             }
 

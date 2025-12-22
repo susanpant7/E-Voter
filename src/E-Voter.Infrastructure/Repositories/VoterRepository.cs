@@ -12,20 +12,23 @@ public class VoterRepository(ApplicationDbContext context) : IVoterRepository
         if (string.IsNullOrWhiteSpace(mobileNumber))
             return null;
 
-        // Normalize: remove +977 if present
-        string cleanMobile = mobileNumber.StartsWith("+977") 
-            ? mobileNumber.Substring(4) 
-            : mobileNumber;
+        // Step 1: Normalize input
+        string input = mobileNumber.Replace(" ", "");         // remove spaces
+        string cleanMobile = input.StartsWith("+977")
+            ? input.Substring(4)
+            : input;
 
+        // Step 2: Query database with simple conditions EF Core can translate
         return await context.Voters
             .Include(v => v.VotingPlace)
             .ThenInclude(vp => vp.Ward)
             .ThenInclude(w => w.Municipality)
             .ThenInclude(m => m.District)
             .ThenInclude(d => d.Province)
-            .FirstOrDefaultAsync(v => 
-                v.MobileNumber == mobileNumber || 
+            .FirstOrDefaultAsync(v =>
+                v.MobileNumber == input ||
                 v.MobileNumber == $"+977{cleanMobile}" ||
                 v.MobileNumber == cleanMobile);
     }
+
 }

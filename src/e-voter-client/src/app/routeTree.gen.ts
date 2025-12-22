@@ -12,9 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TestIndexRouteImport } from './routes/test/index'
 import { Route as ContactIndexRouteImport } from './routes/contact/index'
 import { Route as ProtectedProfileIndexRouteImport } from './routes/_protected/profile/index'
 import { Route as AdminElectionPartiesIndexRouteImport } from './routes/_admin/election-parties/index'
+import { Route as AdminElectionPartiesAddRouteImport } from './routes/_admin/election-parties/add'
+import { Route as AdminElectionPartiesPartyIdRouteImport } from './routes/_admin/election-parties/$partyId'
 
 const ProtectedRoute = ProtectedRouteImport.update({
   id: '/_protected',
@@ -27,6 +30,11 @@ const AdminRoute = AdminRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestIndexRoute = TestIndexRouteImport.update({
+  id: '/test/',
+  path: '/test/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactIndexRoute = ContactIndexRouteImport.update({
@@ -45,16 +53,33 @@ const AdminElectionPartiesIndexRoute =
     path: '/election-parties/',
     getParentRoute: () => AdminRoute,
   } as any)
+const AdminElectionPartiesAddRoute = AdminElectionPartiesAddRouteImport.update({
+  id: '/election-parties/add',
+  path: '/election-parties/add',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminElectionPartiesPartyIdRoute =
+  AdminElectionPartiesPartyIdRouteImport.update({
+    id: '/election-parties/$partyId',
+    path: '/election-parties/$partyId',
+    getParentRoute: () => AdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/contact': typeof ContactIndexRoute
+  '/test': typeof TestIndexRoute
+  '/election-parties/$partyId': typeof AdminElectionPartiesPartyIdRoute
+  '/election-parties/add': typeof AdminElectionPartiesAddRoute
   '/election-parties': typeof AdminElectionPartiesIndexRoute
   '/profile': typeof ProtectedProfileIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/contact': typeof ContactIndexRoute
+  '/test': typeof TestIndexRoute
+  '/election-parties/$partyId': typeof AdminElectionPartiesPartyIdRoute
+  '/election-parties/add': typeof AdminElectionPartiesAddRoute
   '/election-parties': typeof AdminElectionPartiesIndexRoute
   '/profile': typeof ProtectedProfileIndexRoute
 }
@@ -64,20 +89,40 @@ export interface FileRoutesById {
   '/_admin': typeof AdminRouteWithChildren
   '/_protected': typeof ProtectedRouteWithChildren
   '/contact/': typeof ContactIndexRoute
+  '/test/': typeof TestIndexRoute
+  '/_admin/election-parties/$partyId': typeof AdminElectionPartiesPartyIdRoute
+  '/_admin/election-parties/add': typeof AdminElectionPartiesAddRoute
   '/_admin/election-parties/': typeof AdminElectionPartiesIndexRoute
   '/_protected/profile/': typeof ProtectedProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/contact' | '/election-parties' | '/profile'
+  fullPaths:
+    | '/'
+    | '/contact'
+    | '/test'
+    | '/election-parties/$partyId'
+    | '/election-parties/add'
+    | '/election-parties'
+    | '/profile'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/contact' | '/election-parties' | '/profile'
+  to:
+    | '/'
+    | '/contact'
+    | '/test'
+    | '/election-parties/$partyId'
+    | '/election-parties/add'
+    | '/election-parties'
+    | '/profile'
   id:
     | '__root__'
     | '/'
     | '/_admin'
     | '/_protected'
     | '/contact/'
+    | '/test/'
+    | '/_admin/election-parties/$partyId'
+    | '/_admin/election-parties/add'
     | '/_admin/election-parties/'
     | '/_protected/profile/'
   fileRoutesById: FileRoutesById
@@ -87,6 +132,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   ProtectedRoute: typeof ProtectedRouteWithChildren
   ContactIndexRoute: typeof ContactIndexRoute
+  TestIndexRoute: typeof TestIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -112,6 +158,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/test/': {
+      id: '/test/'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof TestIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact/': {
       id: '/contact/'
       path: '/contact'
@@ -133,14 +186,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminElectionPartiesIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/election-parties/add': {
+      id: '/_admin/election-parties/add'
+      path: '/election-parties/add'
+      fullPath: '/election-parties/add'
+      preLoaderRoute: typeof AdminElectionPartiesAddRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/election-parties/$partyId': {
+      id: '/_admin/election-parties/$partyId'
+      path: '/election-parties/$partyId'
+      fullPath: '/election-parties/$partyId'
+      preLoaderRoute: typeof AdminElectionPartiesPartyIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminElectionPartiesPartyIdRoute: typeof AdminElectionPartiesPartyIdRoute
+  AdminElectionPartiesAddRoute: typeof AdminElectionPartiesAddRoute
   AdminElectionPartiesIndexRoute: typeof AdminElectionPartiesIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminElectionPartiesPartyIdRoute: AdminElectionPartiesPartyIdRoute,
+  AdminElectionPartiesAddRoute: AdminElectionPartiesAddRoute,
   AdminElectionPartiesIndexRoute: AdminElectionPartiesIndexRoute,
 }
 
@@ -163,6 +234,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   ProtectedRoute: ProtectedRouteWithChildren,
   ContactIndexRoute: ContactIndexRoute,
+  TestIndexRoute: TestIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

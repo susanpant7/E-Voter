@@ -1,4 +1,4 @@
-namespace E_Voter.Domain;
+namespace E_Voter.Domain.Common;
 
 public interface ISoftDeletable
 {

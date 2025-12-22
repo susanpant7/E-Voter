@@ -8,7 +8,6 @@ export const Route = createFileRoute('/_admin')({
 
 function RouteComponent() {
   return <div className="protected-layout">
-    This is only for admin .... Welcome admin
     <Outlet />
   </div>
 }

@@ -8,6 +8,7 @@ public class TokenValidationMiddleware(RequestDelegate next, ITokenValidator tok
 {
     public async Task InvokeAsync(HttpContext context)
     {
+        //if login is called, no need to check this
         var accessToken = context.Request.Cookies[TokenHelper.AccessTokenCookieName];
         var refreshToken = context.Request.Cookies[TokenHelper.RefreshTokenCookieName];
 
