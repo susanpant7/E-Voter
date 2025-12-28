@@ -8,8 +8,9 @@ public class Province
     public int ProvinceId { get; set; }
 
     [Required]
+    [MaxLength(100)]
     public string ProvinceName { get; set; }
-
+    [MaxLength(50)]
     public string ProvinceCode { get; set; }
 
     // Navigation

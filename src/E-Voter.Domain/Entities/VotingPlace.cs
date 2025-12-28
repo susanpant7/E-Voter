@@ -9,7 +9,7 @@ public class VotingPlace
 
     [Required]
     public string VotingPlaceName { get; set; }
-
+    [MaxLength(200)]
     public string VotingPlaceAddress { get; set; }
 
     // FK to Ward

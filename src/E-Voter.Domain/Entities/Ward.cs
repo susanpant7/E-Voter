@@ -8,6 +8,7 @@ public class Ward
     public int WardId { get; set; }
 
     [Required]
+    [MaxLength(100)]
     public string WardName { get; set; }
     [Required]
     public int WardNumber { get; set; }

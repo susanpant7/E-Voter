@@ -10,6 +10,7 @@ public class TokenValidationMiddleware(RequestDelegate next, ITokenValidator tok
     {
         //if login is called, no need to check this
         var accessToken = context.Request.Cookies[TokenHelper.AccessTokenCookieName];
+        // var accessToken = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic2EiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImEwZWEzMDVkLTY1MWQtNGNmMS1hZDFmLTFjZDZhZjA2YTkyNyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL21vYmlsZXBob25lIjoiKzk3Nzk4NDY1MTQ3NDEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJTVVBFUl9BRE1JTiIsImV4cCI6MTc2NjUxMTc4MywiaXNzIjoiQXV0aGVudGljYXRpb25TZXJ2aWNlIiwiYXVkIjoiRS1Wb3RlciJ9.ojF8zT3yowPina63OAf4BTGERIj2wUHx5Qqp3R6m0fzIA-0n4OU1ZRy3ldHpNLi-kckpD9CQTDE_GsLbuFqmqg";
         var refreshToken = context.Request.Cookies[TokenHelper.RefreshTokenCookieName];
 
         //no tokens, might access public apis

@@ -33,7 +33,6 @@ eVoterApi.interceptors.response.use(
                 return Promise.reject(new Error(errorMessage));
             }
 
-            // ✅ Show success notification for non-GET requests
             const method = response.config.method?.toLowerCase();
             const isNonGet = method && method !== "get";
 

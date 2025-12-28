@@ -9,10 +9,12 @@ public class Municipality
     public int MunicipalityId { get; set; }
 
     [Required]
+    [MaxLength(100)]
     public string MunicipalityName { get; set; }
 
     public MunicipalityType MunicipalityType { get; set; } // Metropolitan, Sub-Metro, Municipality, Rural
 
+    [MaxLength(50)]
     public string MunicipalityCode { get; set; }
 
     // FK to District

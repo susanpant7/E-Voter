@@ -11,6 +11,7 @@ export const privateLinks = [
 
 export const adminLinks = [
     { label: "Election Parties", path: "/election-parties", icon: "️🗳️" },
+    { label: "Voting Places", path: "/voting-places", icon: "️🗳️" },
 ];
 
 export const getUserNavbarLinks = (user: User | null) => {

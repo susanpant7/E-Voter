@@ -25,6 +25,11 @@ public static class InfrastructureConfig
         services.AddScoped<IVoterRepository, VoterRepository>();
         services.AddScoped<IElectionPartyRepository, ElectionPartyRepository>();
         services.AddScoped<IMediaFileRepository, MediaFileRepository>();
+        services.AddScoped<IProvinceRepository, ProvinceRepository>();
+        services.AddScoped<IDistrictRepository, DistrictRepository>();
+        services.AddScoped<IMunicipalityRepository, MunicipalityRepository>();
+        services.AddScoped<IWardRepository, WardRepository>();
+        services.AddScoped<IVotingPlaceRepository, VotingPlaceRepository>();
 
         // Register UnitOfWork
         services.AddScoped<IUnitOfWork, UnitOfWork>();

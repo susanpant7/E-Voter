@@ -31,6 +31,38 @@ public static class FluentApiDbConstraints
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict); //The database blocks the deletion of the LogoFile if the id exists in election party table
         });
+        
+        modelBuilder.Entity<Province>()
+            .HasIndex(p => p.ProvinceName)
+            .IsUnique();
+        modelBuilder.Entity<Province>()
+            .HasIndex(p => p.ProvinceCode)
+            .IsUnique();
+        
+        modelBuilder.Entity<District>()
+            .HasIndex(p => new { p.ProvinceId, p.DistrictName})
+            .IsUnique();
+        modelBuilder.Entity<District>()
+            .HasIndex(p => new { p.ProvinceId, p.DistrictCode})
+            .IsUnique();
+        
+        modelBuilder.Entity<Municipality>()
+            .HasIndex(p => new { p.DistrictId, p.MunicipalityName })
+            .IsUnique();
+        modelBuilder.Entity<Municipality>()
+            .HasIndex(p => new { p.DistrictId, p.MunicipalityCode})
+            .IsUnique();
+        
+        modelBuilder.Entity<Ward>()
+            .HasIndex(p => new { p.MunicipalityId, p.WardName})
+            .IsUnique();
+        modelBuilder.Entity<Ward>()
+            .HasIndex(p => new { p.MunicipalityId, p.WardNumber})
+            .IsUnique();
+        
+        modelBuilder.Entity<VotingPlace>()
+            .HasIndex(p => p.VotingPlaceAddress)
+            .IsUnique();
     }
 }
 

@@ -1,5 +1,5 @@
 import type {ElectionPartyDetail, ElectionPartySummary, UpsertElectionParty} from "./election-party.types.ts";
-import eVoterApi from "../e-voter-api.ts";
+import eVoterApi from "../../../../../api/e-voter-api.ts";
 
 export const getElectionParties = async () : Promise<ElectionPartySummary[]> => {
     return eVoterApi.get<any,ElectionPartySummary[]>("/api/election-parties");

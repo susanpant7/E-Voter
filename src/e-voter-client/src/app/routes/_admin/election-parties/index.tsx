@@ -3,7 +3,8 @@ import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {
   deleteElectionPartyMutationOptions,
   getElectionPartiesQueryOptions
-} from "../../../../api/election-parties/election-parties-query-options.ts";
+} from "./-api/election-parties-query-options.ts";
+
 
 export const Route = createFileRoute('/_admin/election-parties/')({
   component: RouteComponent,

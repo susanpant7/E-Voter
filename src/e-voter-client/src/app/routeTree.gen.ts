@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as TestIndexRouteImport } from './routes/test/index'
 import { Route as ContactIndexRouteImport } from './routes/contact/index'
 import { Route as ProtectedProfileIndexRouteImport } from './routes/_protected/profile/index'
+import { Route as AdminVotingPlacesIndexRouteImport } from './routes/_admin/voting-places/index'
 import { Route as AdminElectionPartiesIndexRouteImport } from './routes/_admin/election-parties/index'
 import { Route as AdminElectionPartiesAddRouteImport } from './routes/_admin/election-parties/add'
 import { Route as AdminElectionPartiesPartyIdRouteImport } from './routes/_admin/election-parties/$partyId'
@@ -47,6 +48,11 @@ const ProtectedProfileIndexRoute = ProtectedProfileIndexRouteImport.update({
   path: '/profile/',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const AdminVotingPlacesIndexRoute = AdminVotingPlacesIndexRouteImport.update({
+  id: '/voting-places/',
+  path: '/voting-places/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminElectionPartiesIndexRoute =
   AdminElectionPartiesIndexRouteImport.update({
     id: '/election-parties/',
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/election-parties/$partyId': typeof AdminElectionPartiesPartyIdRoute
   '/election-parties/add': typeof AdminElectionPartiesAddRoute
   '/election-parties': typeof AdminElectionPartiesIndexRoute
+  '/voting-places': typeof AdminVotingPlacesIndexRoute
   '/profile': typeof ProtectedProfileIndexRoute
 }
 export interface FileRoutesByTo {
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/election-parties/$partyId': typeof AdminElectionPartiesPartyIdRoute
   '/election-parties/add': typeof AdminElectionPartiesAddRoute
   '/election-parties': typeof AdminElectionPartiesIndexRoute
+  '/voting-places': typeof AdminVotingPlacesIndexRoute
   '/profile': typeof ProtectedProfileIndexRoute
 }
 export interface FileRoutesById {
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/_admin/election-parties/$partyId': typeof AdminElectionPartiesPartyIdRoute
   '/_admin/election-parties/add': typeof AdminElectionPartiesAddRoute
   '/_admin/election-parties/': typeof AdminElectionPartiesIndexRoute
+  '/_admin/voting-places/': typeof AdminVotingPlacesIndexRoute
   '/_protected/profile/': typeof ProtectedProfileIndexRoute
 }
 export interface FileRouteTypes {
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
     | '/election-parties/$partyId'
     | '/election-parties/add'
     | '/election-parties'
+    | '/voting-places'
     | '/profile'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -113,6 +123,7 @@ export interface FileRouteTypes {
     | '/election-parties/$partyId'
     | '/election-parties/add'
     | '/election-parties'
+    | '/voting-places'
     | '/profile'
   id:
     | '__root__'
@@ -124,6 +135,7 @@ export interface FileRouteTypes {
     | '/_admin/election-parties/$partyId'
     | '/_admin/election-parties/add'
     | '/_admin/election-parties/'
+    | '/_admin/voting-places/'
     | '/_protected/profile/'
   fileRoutesById: FileRoutesById
 }
@@ -179,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedProfileIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_admin/voting-places/': {
+      id: '/_admin/voting-places/'
+      path: '/voting-places'
+      fullPath: '/voting-places'
+      preLoaderRoute: typeof AdminVotingPlacesIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/election-parties/': {
       id: '/_admin/election-parties/'
       path: '/election-parties'
@@ -207,12 +226,14 @@ interface AdminRouteChildren {
   AdminElectionPartiesPartyIdRoute: typeof AdminElectionPartiesPartyIdRoute
   AdminElectionPartiesAddRoute: typeof AdminElectionPartiesAddRoute
   AdminElectionPartiesIndexRoute: typeof AdminElectionPartiesIndexRoute
+  AdminVotingPlacesIndexRoute: typeof AdminVotingPlacesIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminElectionPartiesPartyIdRoute: AdminElectionPartiesPartyIdRoute,
   AdminElectionPartiesAddRoute: AdminElectionPartiesAddRoute,
   AdminElectionPartiesIndexRoute: AdminElectionPartiesIndexRoute,
+  AdminVotingPlacesIndexRoute: AdminVotingPlacesIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)

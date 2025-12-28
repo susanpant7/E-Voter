@@ -1,15 +1,15 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { TextInput } from "../UI/TextInput.tsx";
-import { TextareaInput } from "../UI/TextAreaInput.tsx";
-import { CheckboxInput } from "../UI/CheckboxInput.tsx";
-import { EmailInput } from "../UI/EmailInput.tsx";
-import { type ElectionPartyDetail, PartyStatus } from "../../api/election-parties/election-party.types.ts";
-import { validateRequiredFields } from "../../utils/form-fields-validator.ts";
 import { useMutation } from "@tanstack/react-query";
-import { upsertMediaFileMutationOptions } from "../../api/media-files/media-files-query-options.ts";
-import { ImageInput } from "../UI/ImageInput.tsx";
 import { Link } from "@tanstack/react-router";
+import {type ElectionPartyDetail, PartyStatus} from "../-api/election-party.types.ts";
+import {upsertMediaFileMutationOptions} from "../../../../../api/media-files/media-files-query-options.ts";
+import {validateRequiredFields} from "../../../../../utils/form-fields-validator.ts";
+import {TextInput} from "../../../../../componenets/UI/TextInput.tsx";
+import {TextareaInput} from "../../../../../componenets/UI/TextAreaInput.tsx";
+import {CheckboxInput} from "../../../../../componenets/UI/CheckboxInput.tsx";
+import {ImageInput} from "../../../../../componenets/UI/ImageInput.tsx";
+import {EmailInput} from "../../../../../componenets/UI/EmailInput.tsx";
 
 type ElectionPartyFormProps = {
     initialData?: Partial<ElectionPartyDetail>;

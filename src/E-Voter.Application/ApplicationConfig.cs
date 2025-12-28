@@ -1,6 +1,7 @@
 using E_Voter.Application.ElectionParties;
 using E_Voter.Application.MediaFiles;
 using E_Voter.Application.Voter;
+using E_Voter.Application.VotingPlaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace E_Voter.Application;
@@ -13,6 +14,7 @@ public static class ApplicationConfig
         services.AddScoped<IVoterService, VoterService>();
         services.AddScoped<IElectionPartyService, ElectionPartyService>();
         services.AddScoped<IMediaFileService, MediaFileService>();
+        services.AddScoped<IVotingPlaceService, VotingPlaceService>();
 
         return services;
     }

@@ -8,8 +8,9 @@ public class District
     public int DistrictId { get; set; }
 
     [Required]
+    [MaxLength(100)]
     public string DistrictName { get; set; }
-
+    [MaxLength(50)]
     public string DistrictCode { get; set; }
 
     // FK to Province

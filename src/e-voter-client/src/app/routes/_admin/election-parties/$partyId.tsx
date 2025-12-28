@@ -1,10 +1,12 @@
 import {createFileRoute, useNavigate} from '@tanstack/react-router'
-import {ElectionPartyForm} from "../../../../componenets/election-parties/AddEditParty.tsx";
 import {useMutation, useQuery} from "@tanstack/react-query";
+import {ElectionPartyForm} from "./-components/AddEditParty.tsx";
 import {
-    getElectionPartyDetailQueryOptions, updateElectionPartyMutationOptions
-} from "../../../../api/election-parties/election-parties-query-options.ts";
-import type {ElectionPartyDetail} from "../../../../api/election-parties/election-party.types.ts";
+    getElectionPartyDetailQueryOptions,
+    updateElectionPartyMutationOptions
+} from "./-api/election-parties-query-options.ts";
+import type {ElectionPartyDetail} from "./-api/election-party.types.ts";
+
 
 export const Route = createFileRoute('/_admin/election-parties/$partyId')({
   component: RouteComponent,
