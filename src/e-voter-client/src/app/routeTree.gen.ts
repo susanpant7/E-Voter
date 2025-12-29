@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as TestIndexRouteImport } from './routes/test/index'
 import { Route as ContactIndexRouteImport } from './routes/contact/index'
 import { Route as ProtectedProfileIndexRouteImport } from './routes/_protected/profile/index'
 import { Route as AdminVotingPlacesIndexRouteImport } from './routes/_admin/voting-places/index'
@@ -31,11 +30,6 @@ const AdminRoute = AdminRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TestIndexRoute = TestIndexRouteImport.update({
-  id: '/test/',
-  path: '/test/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactIndexRoute = ContactIndexRouteImport.update({
@@ -74,7 +68,6 @@ const AdminElectionPartiesPartyIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/contact': typeof ContactIndexRoute
-  '/test': typeof TestIndexRoute
   '/election-parties/$partyId': typeof AdminElectionPartiesPartyIdRoute
   '/election-parties/add': typeof AdminElectionPartiesAddRoute
   '/election-parties': typeof AdminElectionPartiesIndexRoute
@@ -84,7 +77,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/contact': typeof ContactIndexRoute
-  '/test': typeof TestIndexRoute
   '/election-parties/$partyId': typeof AdminElectionPartiesPartyIdRoute
   '/election-parties/add': typeof AdminElectionPartiesAddRoute
   '/election-parties': typeof AdminElectionPartiesIndexRoute
@@ -97,7 +89,6 @@ export interface FileRoutesById {
   '/_admin': typeof AdminRouteWithChildren
   '/_protected': typeof ProtectedRouteWithChildren
   '/contact/': typeof ContactIndexRoute
-  '/test/': typeof TestIndexRoute
   '/_admin/election-parties/$partyId': typeof AdminElectionPartiesPartyIdRoute
   '/_admin/election-parties/add': typeof AdminElectionPartiesAddRoute
   '/_admin/election-parties/': typeof AdminElectionPartiesIndexRoute
@@ -109,7 +100,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/contact'
-    | '/test'
     | '/election-parties/$partyId'
     | '/election-parties/add'
     | '/election-parties'
@@ -119,7 +109,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/contact'
-    | '/test'
     | '/election-parties/$partyId'
     | '/election-parties/add'
     | '/election-parties'
@@ -131,7 +120,6 @@ export interface FileRouteTypes {
     | '/_admin'
     | '/_protected'
     | '/contact/'
-    | '/test/'
     | '/_admin/election-parties/$partyId'
     | '/_admin/election-parties/add'
     | '/_admin/election-parties/'
@@ -144,7 +132,6 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   ProtectedRoute: typeof ProtectedRouteWithChildren
   ContactIndexRoute: typeof ContactIndexRoute
-  TestIndexRoute: typeof TestIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -168,13 +155,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/test/': {
-      id: '/test/'
-      path: '/test'
-      fullPath: '/test'
-      preLoaderRoute: typeof TestIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact/': {
@@ -255,7 +235,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   ProtectedRoute: ProtectedRouteWithChildren,
   ContactIndexRoute: ContactIndexRoute,
-  TestIndexRoute: TestIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -3,9 +3,8 @@ import {createFileRoute} from "@tanstack/react-router";
 import Section from "../../../../componenets/UI/Section.tsx";
 import Field from "../../../../componenets/UI/Field.tsx";
 import StatusField from "../../../../componenets/UI/StatusField.tsx";
-import {getProfile} from "../../../../api/profile/profile.ts";
-import type {Profile} from "../../../../api/profile/profile.types.ts";
-
+import {getProfile} from "./-api/profile.ts";
+import type {Profile} from "./-api/profile.types.ts";
 
 export const Route = createFileRoute('/_protected/profile/')({
     component: RouteComponent,

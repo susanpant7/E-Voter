@@ -1,6 +1,6 @@
 import { redirect } from '@tanstack/react-router';
 import { useAuthStore } from '../stores/authStore';
-import {ROLE_NAMES} from "../types/role-names.ts";
+import {ROLE_NAMES} from "../app/routes/-auth/api/auth.types.ts";
 
 export const adminGuard = (location: any) => {
     const { user } = useAuthStore.getState();

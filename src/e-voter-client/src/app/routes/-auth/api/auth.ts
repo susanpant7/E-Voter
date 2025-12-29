@@ -1,8 +1,8 @@
-import {useAuthStore, type User} from "../../stores/authStore.ts";
-import {showSuccessNotification} from "../../componenets/UI/Toast.tsx";
 import type {LoginPayload} from "./auth.types.ts";
-import eVoterApi from "../e-voter-api.ts";
-import {EndPoints} from "../endpoint-routes.ts";
+import {useAuthStore, type User} from "../../../../stores/authStore.ts";
+import eVoterApi from "../../../../api/e-voter-api.ts";
+import {EndPoints} from "../../../../api/endpoint-routes.ts";
+import {showSuccessNotification} from "../../../../componenets/UI/Toast.tsx";
 
 export async function loadCurrentUser() {
     const { setUser } = useAuthStore.getState();

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {Outlet, createRootRoute} from '@tanstack/react-router'
-import Header from "../../componenets/Header.tsx";
 import {NotificationBar} from "../../componenets/UI/Toast.tsx";
+import Header from "./-navbar/Header.tsx";
 
 export const Route = createRootRoute({
     component: RootComponent,

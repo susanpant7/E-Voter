@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
-import { useAuthStore } from "../stores/authStore.ts";
 import { Link, useNavigate } from "@tanstack/react-router";
-import LoginModal from "./auth/LoginModal.tsx";
-import { logoutApi } from "../api/auth/auth.ts";
-import { getUserNavbarLinks } from "../utils/navbar-links.ts";
+import {useAuthStore} from "../../../stores/authStore.ts";
+import {getUserNavbarLinks} from "./navbar-links.ts";
+import {logoutApi} from "../-auth/api/auth.ts";
+import LoginModal from "../-auth/LoginModal.tsx";
 
 export default function Header() {
     const navigate = useNavigate();

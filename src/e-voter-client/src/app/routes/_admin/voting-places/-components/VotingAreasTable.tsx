@@ -14,9 +14,13 @@ import {
     deleteVotingPlace,
     updateVotingPlace,
 } from "../-api/voting-place.api.ts";
+import {isEmpty} from "../../../../../utils/input-validators.ts";
 
 interface VotingAreasTableProps {
     wardInfo: WardInfo;
+    provinceName: string;
+    districtName: string;
+    municipalityName: string;
 }
 
 const VotingAreasTable = (props:VotingAreasTableProps) => {
@@ -46,6 +50,9 @@ const VotingAreasTable = (props:VotingAreasTableProps) => {
     }
 
     const onAddEditSave = async () => {
+        if(isEmpty(addEditVotingPlace.votingPlaceName) || isEmpty(addEditVotingPlace.votingPlaceAddress)){
+            return;
+        }
         const request = {
             votingPlaceName: addEditVotingPlace.votingPlaceName!,
             votingPlaceAddress: addEditVotingPlace.votingPlaceAddress!,
@@ -69,77 +76,66 @@ const VotingAreasTable = (props:VotingAreasTableProps) => {
 
     return (
         <div >
-            <div className="max-w-4xl mx-auto">
-                {/* Table */}
-                <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
-                    <table className="w-full">
-                        <thead>
-                        <tr className="bg-gray-100">
-                            <th className="py-3 px-6 text-left text-sm font-semibold text-gray-700 border-b border-gray-300">
-                                Name
-                            </th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold text-gray-700 border-b border-gray-300">
-                                Address
-                            </th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold text-gray-700 border-b border-gray-300">
+            <div className="border rounded-md bg-slate-50">
+                <div className="flex items-center justify-start gap-3 px-4 py-2 border-b border-slate-200 bg-slate-50 rounded-t-md">
+                    {/* Title */}
+                    <h3 className="text-xs sm:text-sm font-semibold text-slate-800 tracking-tight flex-1 truncate flex items-center gap-1">
+                        <span className="inline-block animate-pulse shrink-0">📍</span>
+                        <span className="truncate">
+                          Voting Places in Province: <span className="font-medium">{props.provinceName}</span> | 
+                          District: <span className="font-medium">{props.districtName}</span> | 
+                          Municipality: <span className="font-medium">{props.municipalityName}</span> | 
+                          Ward: <span className="font-medium">{props.wardInfo.wardName}</span>
+                        </span>
+                    </h3>
 
-                            </th>
+                    {/* Add Button */}
+                    <AddButton label="Add Voting Place" onClick={onAddButtonClick} />
+                </div>
+
+
+
+
+                <div className={data?.length ? "max-h-[200px] overflow-y-auto" : ""}>
+                    <table className="w-full">
+                        <thead className="bg-slate-100 text-sm">
+                        <tr>
+                            <th className="px-4 py-2 text-left">Voting Place Name</th>
+                            <th className="px-4 py-2 text-left">Address</th>
+                            <th className="px-4 py-2"></th>
                         </tr>
                         </thead>
 
-                        {/* Table Body */}
                         <tbody>
                         {(!data || data.length === 0) && (
                             <tr>
-                                <td colSpan={5} className="py-10 text-center">
-                                    <div className="flex flex-col items-center gap-3 text-gray-500">
-                                        <span>No voting places found. Add new voting place: </span>
-
-                                        {!openAddEditModal && (
-                                            <AddButton onClick={() => onAddButtonClick()} />
-                                        )}
-                                    </div>
+                                <td colSpan={3} className="py-8 text-center text-gray-500">
+                                    No voting places
                                 </td>
                             </tr>
                         )}
-                        {data?.map((votingPlace,index) => {
-                            const isLastRow = index === (data?.length ?? 0) - 1;
+
+                        {data?.map((place) => {
                             return (
-                                <>
-                                    <tr key={votingPlace.votingPlaceId}>
-                                        <td className="py-4 px-6">
-                                            <div className="text-gray-800 font-medium">
-                                                {votingPlace.votingPlaceName}
-                                            </div>
-                                        </td>
-
-                                        {/* Code Column */}
-                                        <td className="py-4 px-6">
-                                            <div className="text-gray-700 font-mono">
-                                                {votingPlace.votingPlaceAddress}
-                                            </div>
-                                        </td>
-
-                                        {/* Actions Column */}
-                                        <td className="py-4 px-6">
-                                            <div className="flex space-x-2">
-                                                <EditButton
-                                                    onClick={() => onEditButtonClick(votingPlace)}
-                                                />
-                                                <DeleteButton
-                                                    onClick={() => onDeleteButtonClick(votingPlace)}
-                                                />
-                                                {isLastRow && !openAddEditModal && (
-                                                    <AddButton onClick={()=>onAddButtonClick()} />
-                                                )}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </>
-
+                                <tr
+                                    key={place.votingPlaceId}
+                                    className="border-b hover:bg-slate-100 transition"
+                                >
+                                    <td className="px-4 py-2 font-medium">
+                                        {place.votingPlaceName}
+                                    </td>
+                                    <td className="px-4 py-2 text-sm">
+                                        {place.votingPlaceAddress}
+                                    </td>
+                                    <td className="px-4 py-2">
+                                        <div className="flex gap-2">
+                                            <EditButton onClick={() => onEditButtonClick(place)} />
+                                            <DeleteButton onClick={() => onDeleteButtonClick(place)} />
+                                        </div>
+                                    </td>
+                                </tr>
                             );
                         })}
-
                         </tbody>
                     </table>
                 </div>

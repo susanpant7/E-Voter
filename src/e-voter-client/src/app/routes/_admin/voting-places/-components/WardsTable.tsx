@@ -17,9 +17,12 @@ import {
     deleteWard,
     updateWard
 } from "../-api/voting-place.api.ts";
+import {isEmpty} from "../../../../../utils/input-validators.ts";
 
 interface WardsTableProps {
     municipalityInfo: MunicipalityInfo;
+    provinceName: string;
+    districtName: string;
 }
 
 const WardsTable = (props:WardsTableProps) => {
@@ -54,6 +57,9 @@ const WardsTable = (props:WardsTableProps) => {
     }
 
     const onAddEditSave = async () => {
+        if(isEmpty(addEditWard.wardName) || isEmpty(addEditWard.wardNumber?.toString()) || addEditWard.wardNumber == 0){
+            return;
+        }
         const request = {
             wardName: addEditWard.wardName!,
             wardNumber: addEditWard.wardNumber!,
@@ -77,99 +83,88 @@ const WardsTable = (props:WardsTableProps) => {
 
     return (
         <div >
-            <div className="max-w-4xl mx-auto">
-                {/* Table */}
-                <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+            <div className="border rounded-md bg-amber-50">
+                <div className="flex items-center justify-start gap-3 px-4 py-2 border-b border-amber-200 bg-amber-50 rounded-t-md">
+                    {/* Title */}
+                    <h3 className="text-sm sm:text-base font-bold text-amber-900 tracking-wide flex-1 truncate flex items-center gap-1 relative">
+                        <span className="inline-block animate-pulse shrink-0">🟠</span>
+                        <span className="truncate">
+                          Wards in Province: <span className="font-semibold">{props.provinceName}</span> | 
+                          District: <span className="font-semibold">{props.districtName}</span> | 
+                          Municipality: <span className="font-semibold">{props.municipalityInfo.municipalityName}</span>
+                        </span>
+                        <span className="absolute bottom-0 left-0 w-16 h-0.5 bg-amber-500 rounded-full"></span>
+                    </h3>
+
+                    {/* Add Button */}
+                    <AddButton label="Add Ward" onClick={onAddButtonClick} />
+                </div>
+
+
+
+                <div className={data?.length ? "max-h-[220px] overflow-y-auto" : ""}>
                     <table className="w-full">
-                        <thead>
-                        <tr className="bg-gray-100">
-                            <th className="w-12 px-4 py-3"></th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold text-gray-700 border-b border-gray-300">
-                                Ward Name
-                            </th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold text-gray-700 border-b border-gray-300">
-                                Ward Number
-                            </th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold text-gray-700 border-b border-gray-300">
-                                
-                            </th>
+                        <thead className="bg-amber-100 text-sm">
+                        <tr>
+                            <th className="w-12 px-3 py-2"></th>
+                            <th className="px-3 py-2 text-left">Ward Name</th>
+                            <th className="px-3 py-2 text-left">Ward Number</th>
+                            <th className="px-3 py-2"></th>
                         </tr>
                         </thead>
 
-                        {/* Table Body */}
                         <tbody>
                         {(!data || data.length === 0) && (
                             <tr>
-                                <td colSpan={5} className="py-10 text-center">
-                                    <div className="flex flex-col items-center gap-3 text-gray-500">
-                                        <span>No wards found. Add new wards: </span>
-
-                                        {!openAddEditModal && (
-                                            <AddButton onClick={() => onAddButtonClick()} />
-                                        )}
-                                    </div>
+                                <td colSpan={4} className="py-8 text-center text-gray-500">
+                                    No wards
                                 </td>
                             </tr>
                         )}
+
                         {data?.map((ward,index) => {
-                            // This derived variable is unique to every row render
-                            const isRowExpanded = expandedRowId === ward.wardId;
-                            const isLastRow = index === (data?.length ?? 0) - 1;
+                            const isExpanded = expandedRowId === ward.wardId;
+                            if (expandedRowId !== null && index > data.findIndex(p => p.wardId === expandedRowId)) {
+                                return null;
+                            }
                             return (
                                 <>
-                                    <tr key={ward.wardId}>
-                                        <td className="px-4 py-3">
+                                    <tr
+                                        key={ward.wardId}
+                                        className="border-b hover:bg-amber-100 transition"
+                                    >
+                                        <td className="px-3 py-2">
                                             <button onClick={() => toggleRow(ward)}>
-                                                <ExpandCollapseIcon isExpanded={isRowExpanded} />
+                                                <ExpandCollapseIcon isExpanded={isExpanded} />
                                             </button>
                                         </td>
-                                        {/* Province Name Column */}
-                                        <td className="py-4 px-6">
-                                            <div className="text-gray-800 font-medium">
-                                                {ward.wardName}
-                                            </div>
-                                        </td>
 
-                                        {/* Code Column */}
-                                        <td className="py-4 px-6">
-                                            <div className="text-gray-700 font-mono">
-                                                {ward.wardNumber}
-                                            </div>
-                                        </td>
+                                        <td className="px-3 py-2">{ward.wardName}</td>
+                                        <td className="px-3 py-2 font-mono">{ward.wardNumber}</td>
 
-                                        {/* Actions Column */}
-                                        <td className="py-4 px-6">
-                                            <div className="flex space-x-2">
-                                                <EditButton
-                                                    onClick={() => onEditButtonClick(ward)}
-                                                />
-                                                <DeleteButton
-                                                    onClick={() => onDeleteButtonClick(ward)}
-                                                />
-                                                {isLastRow && !openAddEditModal && (
-                                                    <AddButton onClick={()=>onAddButtonClick()} />
-                                                )}
+                                        <td className="px-3 py-2">
+                                            <div className="flex gap-2">
+                                                <EditButton onClick={() => onEditButtonClick(ward)} />
+                                                <DeleteButton onClick={() => onDeleteButtonClick(ward)} />
                                             </div>
                                         </td>
                                     </tr>
-                                    { isRowExpanded &&
-                                        <tr className="bg-gray-50">
-                                            <td colSpan={5} className="p-0 border-b border-gray-200">
-                                                <div className="w-full pl-12 pr-4 py-4 bg-gray-50/50 border-l-4 border-indigo-500">
-                                                    <VotingAreasTable wardInfo={ward} />
-                                                </div>
+
+                                    {isExpanded && (
+                                        <tr className="animate-slideDown">
+                                            <td colSpan={4} className="pl-10 py-3 bg-amber-100/50">
+                                                <VotingAreasTable wardInfo={ward} districtName={props.districtName} provinceName={props.provinceName} municipalityName={props.municipalityInfo.municipalityName} />
                                             </td>
                                         </tr>
-                                    }
+                                    )}
                                 </>
-
                             );
                         })}
-
                         </tbody>
                     </table>
                 </div>
             </div>
+
             <AddEditModal
                 isOpen={openAddEditModal}
                 title={`${addEditWard?.wardId? 'Edit' : 'Add'} Ward`}
@@ -179,6 +174,7 @@ const WardsTable = (props:WardsTableProps) => {
                 <div className="space-y-4">
                     <div>
                         <TextInput
+                            required={true}
                             label={'Ward Name'}
                             value={addEditWard?.wardName || ""}
                             onChange={(e) =>
@@ -192,6 +188,7 @@ const WardsTable = (props:WardsTableProps) => {
 
                     <div>
                         <NumberInput
+                            required={true}
                             label="Ward Number"
                             value={addEditWard?.wardNumber?.toString() ?? ""}
                             onChange={(value) =>

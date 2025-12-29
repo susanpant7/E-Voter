@@ -12,6 +12,7 @@ import {AddButton} from "../../../../../componenets/UI/AddButton.tsx";
 import {AddEditModal} from "./AddEditModal.tsx";
 import {TextInput} from "../../../../../componenets/UI/TextInput.tsx";
 import {addProvince, deleteProvince, updateProvince} from "../-api/voting-place.api.ts";
+import {isEmpty} from "../../../../../utils/input-validators.ts";
 
 const ProvincesTable = () => {
     const { data, isPending } = useQuery(getProvincesQueryOptions());
@@ -46,6 +47,9 @@ const ProvincesTable = () => {
     }
 
     const onAddEditSave = async () => {
+        if(isEmpty(addEditProvince.provinceCode) || isEmpty(addEditProvince.provinceName)){
+            return;
+        }
         const request = {
             provinceCode: addEditProvince.provinceCode!,
             provinceName: addEditProvince.provinceName!
@@ -69,111 +73,85 @@ const ProvincesTable = () => {
     
     return (
         <div >
-            <div className="max-w-4xl mx-auto">
-                {/* Table */}
-                <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
-                    <table className="w-full">
-                        {/* Table Header */}
-                        <thead>
-                        <tr className="bg-gray-100">
-                            <th className="w-12 px-4 py-3"></th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold text-gray-700 border-b border-gray-300">
-                                Province Name
-                            </th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold text-gray-700 border-b border-gray-300">
-                                Province Code
-                            </th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold text-gray-700 border-b border-gray-300">
-                                
-                            </th>
+            <div className="max-w-6xl mx-auto border rounded-lg bg-white">
+                <div className="flex items-center justify-start gap-4 px-4 py-3 border-b bg-gray-50 rounded-t-md">
+                    <h2 className="text-lg sm:text-xl font-bold text-gray-800 tracking-wide relative">
+                        <span className="inline-block mr-2 animate-pulse">📍</span>
+                        Provinces
+                        <span className="ml-2 w-16 h-1 bg-indigo-500 rounded-full block absolute bottom-0 left-0"></span>
+                    </h2>
+                    <AddButton label="Add Province" onClick={onAddButtonClick} />
+                </div>
+
+                <table className="w-full">
+                    <thead className="bg-gray-100 text-sm text-gray-700">
+                    <tr>
+                        <th className="w-12 px-4 py-2"></th>
+                        <th className="px-4 py-2 text-left">Province Name</th>
+                        <th className="px-4 py-2 text-left">Province Code</th>
+                        <th className="px-4 py-2"></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {(!data || data.length === 0) && (
+                        <tr>
+                            <td colSpan={4} className="py-10 text-center text-gray-500">
+                                No provinces found
+                            </td>
                         </tr>
-                        </thead>
+                    )}
 
-                        {/* Table Body */}
-                        <tbody>
-                        {(!data || data.length === 0) && (
-                            <tr>
-                                <td colSpan={5} className="py-10 text-center">
-                                    <div className="flex flex-col items-center gap-3 text-gray-500">
-                                        <span>No provinces found. Add new province</span>
+                    {data?.map((province, index) => {
+                        const isExpanded = expandedRowId === province.provinceId;
+                        if (expandedRowId !== null && index > data.findIndex(p => p.provinceId === expandedRowId)) {
+                            return null;
+                        }
+                        return (
+                            <>
+                                <tr
+                                    key={province.provinceId}
+                                    className="border-b hover:bg-gray-50 transition"
+                                >
+                                    <td className="px-4 py-2">
+                                        <button onClick={() => toggleRow(province)}>
+                                            <ExpandCollapseIcon isExpanded={isExpanded} />
+                                        </button>
+                                    </td>
 
-                                        {!openAddEditModal && (
-                                            <AddButton onClick={() => onAddButtonClick()} />
-                                        )}
-                                    </div>
-                                </td>
-                            </tr>
-                        )}
-                        {data?.map((province,index) => {
-                            // This derived variable is unique to every row render
-                            const isRowExpanded = expandedRowId === province.provinceId;
-                            const isLastRow = index === (data?.length ?? 0) - 1;
-                            return (
-                                <>
-                                    <tr key={province.provinceId}>
-                                        <td className="px-4 py-3">
-                                            <button onClick={() => toggleRow(province)}>
-                                                {/* Pass the derived boolean here */}
-                                                <ExpandCollapseIcon isExpanded={isRowExpanded} />
-                                            </button>
-                                        </td>
-                                        {/* Province Name Column */}
-                                        <td className="py-4 px-6">
-                                            <div className="text-gray-800 font-medium">
-                                                {province.provinceName}
-                                            </div>
-                                        </td>
+                                    <td className="px-4 py-2 font-medium">
+                                        {province.provinceName}
+                                    </td>
 
-                                        {/* Code Column */}
-                                        <td className="py-4 px-6">
-                                            <div className="text-gray-700 font-mono">
-                                                {province.provinceCode}
-                                            </div>
-                                        </td>
+                                    <td className="px-4 py-2 font-mono">
+                                        {province.provinceCode}
+                                    </td>
 
-                                        {/* Actions Column */}
-                                        <td className="py-4 px-6">
-                                            <div className="flex space-x-2">
-                                                <EditButton
-                                                    onClick={() => onEditButtonClick(province)}
-                                                />
-                                                <DeleteButton
-                                                    onClick={() => onDeleteButtonClick(province)}
-                                                />
-                                                {isLastRow && !openAddEditModal && (
-                                                    <AddButton onClick={()=>onAddButtonClick()} />
-                                                )}
+                                    <td className="px-4 py-2">
+                                        <div className="flex gap-2">
+                                            <EditButton onClick={() => onEditButtonClick(province)} />
+                                            <DeleteButton onClick={() => onDeleteButtonClick(province)} />
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                {isExpanded && (
+                                    <tr className="animate-fadeIn">
+                                        <td colSpan={4} className="p-0">
+                                            <div className="pl-10 py-4 border-l-4 border-indigo-500 bg-indigo-50/50">
+                                                <DistrictsTable provinceInfo={province} />
                                             </div>
                                         </td>
                                     </tr>
-                                    {
-                                        isRowExpanded &&
-                                        <tr className="bg-gray-50">
-                                            <td colSpan={5} className="p-0 border-b border-gray-200">
-                                                <div className="w-full pl-12 pr-4 py-4 bg-gray-50/60 border-l-4 border-indigo-500 rounded-r-md space-y-3">
-                                                    <div className="text-sm font-medium text-gray-700">
-                                                        Districts under
-                                                        <span className="mx-1 rounded bg-indigo-50 px-2 py-0.5 font-semibold text-indigo-700">
-                                                            {province.provinceName}
-                                                        </span>
-                                                        province
-                                                    </div>
-
-                                                    <DistrictsTable provinceInfo={province} />
-                                                </div>
-
-                                            </td>
-                                        </tr>
-                                    }
-                                </>
-                                
-                            );
-                        })}
-
-                        </tbody>
-                    </table>
-                </div>
+                                )}
+                            </>
+                        );
+                    })}
+                    </tbody>
+                </table>
             </div>
+
+
 
             <AddEditModal
                 isOpen={openAddEditModal}

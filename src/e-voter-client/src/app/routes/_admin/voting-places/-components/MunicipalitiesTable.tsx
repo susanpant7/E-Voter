@@ -22,9 +22,11 @@ import {
     updateMunicipality
 } from "../-api/voting-place.api.ts";
 import {SelectInput} from "../../../../../componenets/UI/SelectInput.tsx";
+import {isEmpty} from "../../../../../utils/input-validators.ts";
 
 interface MunicipalitiesTableProps {
     districtInfo: DistrictInfo;
+    provinceName: string;
 }
 
 const MunicipalitiesTable = (props:MunicipalitiesTableProps) => {
@@ -59,6 +61,9 @@ const MunicipalitiesTable = (props:MunicipalitiesTableProps) => {
     }
 
     const onAddEditSave = async () => {
+        if(isEmpty(addEditMunicipality.municipalityCode) || isEmpty(addEditMunicipality.municipalityName) || !addEditMunicipality.municipalityType){
+            return;
+        }
         const request = {
             municipalityCode: addEditMunicipality.municipalityCode!,
             municipalityName: addEditMunicipality.municipalityName!,
@@ -83,100 +88,85 @@ const MunicipalitiesTable = (props:MunicipalitiesTableProps) => {
 
     return (
         <div >
-            <div className="max-w-4xl mx-auto">
-                {/* Table */}
-                <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+            <div className="border rounded-md bg-emerald-50">
+                <div className="flex items-center justify-start gap-3 px-4 py-2 border-b border-emerald-200 bg-emerald-50 rounded-t-md">
+                    {/* Title */}
+                    <h3 className="text-sm sm:text-base font-bold text-emerald-900 tracking-wide relative flex items-center gap-1">
+                        <span className="inline-block animate-pulse">🏘️</span>
+                        Municipalities in Province: <span className="font-semibold">{props.provinceName}</span> | District: <span className="font-semibold">{props.districtInfo.districtName}</span>
+                        <span className="absolute bottom-0 left-0 w-14 h-0.5 bg-emerald-500 rounded-full"></span>
+                    </h3>
+
+                    {/* Add Button */}
+                    {!openAddEditModal && <AddButton label="Add Municipality" onClick={onAddButtonClick} />}
+                </div>
+
+
+                <div className={data?.length ? "max-h-[260px] overflow-y-auto" : ""}>
                     <table className="w-full">
-                        {/* Table Header */}
-                        <thead>
-                        <tr className="bg-gray-100">
-                            <th className="w-12 px-4 py-3"></th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold text-gray-700 border-b border-gray-300">
-                                Name
-                            </th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold text-gray-700 border-b border-gray-300">
-                                Code
-                            </th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold text-gray-700 border-b border-gray-300">
-                                
-                            </th>
+                        <thead className="bg-emerald-100 text-sm">
+                        <tr>
+                            <th className="w-12 px-3 py-2"></th>
+                            <th className="px-3 py-2 text-left">Municipality Name</th>
+                            <th className="px-3 py-2 text-left">Type</th>
+                            <th className="px-3 py-2 text-left">Code</th>
+                            <th className="px-3 py-2"></th>
                         </tr>
                         </thead>
 
-                        {/* Table Body */}
                         <tbody>
                         {(!data || data.length === 0) && (
                             <tr>
-                                <td colSpan={5} className="py-10 text-center">
-                                    <div className="flex flex-col items-center gap-3 text-gray-500">
-                                        <span>No municipalities found. Add new municipality: </span>
-
-                                        {!openAddEditModal && (
-                                            <AddButton onClick={() => onAddButtonClick()} />
-                                        )}
-                                    </div>
+                                <td colSpan={5} className="py-8 text-center text-gray-500">
+                                    No municipalities
                                 </td>
                             </tr>
                         )}
-                        {data?.map((municipality,index) => {
-                            // This derived variable is unique to every row render
-                            const isRowExpanded = expandedRowId === municipality.municipalityId;
-                            const isLastRow = index === (data?.length ?? 0) - 1;
+
+                        {data?.map((m,index) => {
+                            const isExpanded = expandedRowId === m.municipalityId;
+                            if (expandedRowId !== null && index > data.findIndex(p => p.municipalityId === expandedRowId)) {
+                                return null;
+                            }
                             return (
                                 <>
-                                    <tr key={municipality.municipalityId}>
-                                        <td className="px-4 py-3">
-                                            <button onClick={() => toggleRow(municipality)}>
-                                                <ExpandCollapseIcon isExpanded={isRowExpanded} />
+                                    <tr
+                                        key={m.municipalityId}
+                                        className="border-b hover:bg-emerald-100 transition"
+                                    >
+                                        <td className="px-3 py-2">
+                                            <button onClick={() => toggleRow(m)}>
+                                                <ExpandCollapseIcon isExpanded={isExpanded} />
                                             </button>
                                         </td>
-                                        {/* Province Name Column */}
-                                        <td className="py-4 px-6">
-                                            <div className="text-gray-800 font-medium">
-                                                {municipality.municipalityName}
-                                            </div>
-                                        </td>
 
-                                        {/* Code Column */}
-                                        <td className="py-4 px-6">
-                                            <div className="text-gray-700 font-mono">
-                                                {municipality.municipalityCode}
-                                            </div>
-                                        </td>
+                                        <td className="px-3 py-2">{m.municipalityName}</td>
+                                        <td className="px-3 py-2">{m.municipalityType}</td>
+                                        <td className="px-3 py-2 font-mono">{m.municipalityCode}</td>
 
-                                        {/* Actions Column */}
-                                        <td className="py-4 px-6">
-                                            <div className="flex space-x-2">
-                                                <EditButton
-                                                    onClick={() => onEditButtonClick(municipality)}
-                                                />
-                                                <DeleteButton
-                                                    onClick={() => onDeleteButtonClick(municipality)}
-                                                />
-                                                {isLastRow && !openAddEditModal && (
-                                                    <AddButton onClick={()=>onAddButtonClick()} />
-                                                )}
+                                        <td className="px-3 py-2">
+                                            <div className="flex gap-2">
+                                                <EditButton onClick={() => onEditButtonClick(m)} />
+                                                <DeleteButton onClick={() => onDeleteButtonClick(m)} />
                                             </div>
                                         </td>
                                     </tr>
-                                    { isRowExpanded &&
-                                        <tr className="bg-gray-50">
-                                            <td colSpan={5} className="p-0 border-b border-gray-200">
-                                                <div className="w-full pl-12 pr-4 py-4 bg-gray-50/50 border-l-4 border-indigo-500">
-                                                    <WardsTable municipalityInfo={municipality} />
-                                                </div>
+
+                                    {isExpanded && (
+                                        <tr className="animate-fadeIn">
+                                            <td colSpan={5} className="pl-10 py-3 bg-emerald-100/50">
+                                                <WardsTable municipalityInfo={m} provinceName={props.provinceName} districtName={props.districtInfo.districtName} />
                                             </td>
                                         </tr>
-                                    }
+                                    )}
                                 </>
-
                             );
                         })}
-
                         </tbody>
                     </table>
                 </div>
             </div>
+            
             <AddEditModal
                 isOpen={openAddEditModal}
                 title={`${addEditMunicipality?.municipalityId? 'Edit' : 'Add'} Municipality`}
@@ -186,6 +176,7 @@ const MunicipalitiesTable = (props:MunicipalitiesTableProps) => {
                 <div className="space-y-4">
                     <div>
                         <TextInput
+                            required={true}
                             label={'Municipality Name'}
                             value={addEditMunicipality?.municipalityName || ""}
                             onChange={(e) =>
@@ -199,6 +190,7 @@ const MunicipalitiesTable = (props:MunicipalitiesTableProps) => {
 
                     <div>
                         <TextInput
+                            required={true}
                             label={'Municipality Code'}
                             value={addEditMunicipality?.municipalityCode || ""}
                             onChange={(e) =>

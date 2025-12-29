@@ -26,9 +26,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         FluentApiDbConstraints.ConfigureDbConstraints(modelBuilder);
         base.OnModelCreating(modelBuilder);
 
-        SeedDemographicPlaceData.Add(modelBuilder);
-        SeedVoterData.Add(modelBuilder);
-        SeedElectionPartyData.Add(modelBuilder);
+        // SeedDemographicPlaceData.Add(modelBuilder);
+        // SeedVoterData.Add(modelBuilder);
+        // SeedElectionPartyData.Add(modelBuilder);
     }
 
     private static void ConfigureManyToManyEntities(ModelBuilder modelBuilder)

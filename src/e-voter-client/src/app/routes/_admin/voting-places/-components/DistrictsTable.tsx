@@ -10,6 +10,7 @@ import {AddButton} from "../../../../../componenets/UI/AddButton.tsx";
 import {TextInput} from "../../../../../componenets/UI/TextInput.tsx";
 import {AddEditModal} from "./AddEditModal.tsx";
 import {addDistrict, deleteProvince, updateDistrict} from "../-api/voting-place.api.ts";
+import {isEmpty} from "../../../../../utils/input-validators.ts";
 
 interface DistrictsTableProps {
     provinceInfo: ProvinceInfo;
@@ -48,6 +49,9 @@ const DistrictsTable = (props:DistrictsTableProps) => {
     }
 
     const onAddEditSave = async () => {
+        if(isEmpty(addEditDistrict.districtCode) || isEmpty(addEditDistrict.districtName)){
+            return
+        }
         const request = {
             districtCode: addEditDistrict.districtCode!,
             districtName: addEditDistrict.districtName!
@@ -71,100 +75,89 @@ const DistrictsTable = (props:DistrictsTableProps) => {
 
     return (
         <div>
-            <div className="max-w-4xl mx-auto">
-                {/* Table */}
-                <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+            <div className="border rounded-md bg-blue-50">
+                {/* HEADER */}
+                <div className="flex items-center justify-start gap-3 px-4 py-2 border-b border-blue-200 bg-blue-50 rounded-t-md">
+                    {/* Title */}
+                    <h3 className="text-sm sm:text-base font-bold text-blue-900 tracking-wide relative flex items-center gap-1">
+                        <span className="inline-block animate-pulse">📍</span>
+                        Districts in Province: <span className="ml-1 font-semibold">{props.provinceInfo.provinceName}</span>
+                        <span className="absolute bottom-0 left-0 w-12 h-0.5 bg-blue-500 rounded-full"></span>
+                    </h3>
+
+                    {/* Add Button */}
+                    {!openAddEditModal && <AddButton label="Add District" onClick={onAddButtonClick} />}
+                </div>
+
+
+                <div className={data?.length ? "max-h-[500px] overflow-y-auto" : ""}>
                     <table className="w-full">
-                        {/* Table Header */}
-                        <thead>
-                        <tr className="bg-gray-100">
-                            <th className="w-12 px-4 py-3"></th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold text-gray-700 border-b border-gray-300">
-                                District Name
-                            </th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold text-gray-700 border-b border-gray-300">
-                                Code
-                            </th>
-                            <th className="py-3 px-6 text-left text-sm font-semibold text-gray-700 border-b border-gray-300">
-                                
-                            </th>
+                        <thead className="bg-blue-100 text-sm">
+                        <tr>
+                            <th className="w-12 px-3 py-2"></th>
+                            <th className="px-3 py-2 text-left">District Name</th>
+                            <th className="px-3 py-2 text-left">District Code</th>
+                            <th className="px-3 py-2"></th>
                         </tr>
                         </thead>
 
-                        {/* Table Body */}
                         <tbody>
                         {(!data || data.length === 0) && (
                             <tr>
-                                <td colSpan={5} className="py-10 text-center">
-                                    <div className="flex flex-col items-center gap-3 text-gray-500">
-                                        <span>No districts found. Add new districts :</span>
-
-                                        {!openAddEditModal && (
-                                            <AddButton onClick={() => onAddButtonClick()} />
-                                        )}
-                                    </div>
+                                <td colSpan={4} className="py-8 text-center text-gray-500">
+                                    No districts
                                 </td>
                             </tr>
                         )}
+
                         {data?.map((district,index) => {
-                            // This derived variable is unique to every row render
-                            const isRowExpanded = expandedRowId === district.districtId;
-                            const isLastRow = index === (data?.length ?? 0) - 1;
+                            const isExpanded = expandedRowId === district.districtId;
+                            if (expandedRowId !== null && index > data.findIndex(p => p.districtId === expandedRowId)) {
+                                return null;
+                            }
                             return (
                                 <>
-                                    <tr key={district.districtId}>
-                                        <td className="px-4 py-3">
+                                    <tr
+                                        key={district.districtId}
+                                        className="border-b hover:bg-blue-100 transition"
+                                    >
+                                        <td className="px-3 py-2">
                                             <button onClick={() => toggleRow(district)}>
-                                                <ExpandCollapseIcon isExpanded={isRowExpanded} />
+                                                <ExpandCollapseIcon isExpanded={isExpanded} />
                                             </button>
                                         </td>
-                                        {/* Province Name Column */}
-                                        <td className="py-4 px-6">
-                                            <div className="text-gray-800 font-medium">
-                                                {district.districtName}
-                                            </div>
+
+                                        <td className="px-3 py-2 font-medium">
+                                            {district.districtName}
                                         </td>
 
-                                        {/* Code Column */}
-                                        <td className="py-4 px-6">
-                                            <div className="text-gray-700 font-mono">
-                                                {district.districtCode}
-                                            </div>
+                                        <td className="px-3 py-2 font-mono">
+                                            {district.districtCode}
                                         </td>
 
-                                        {/* Actions Column */}
-                                        <td className="py-4 px-6">
-                                            <div className="flex space-x-2">
-                                                <EditButton
-                                                    onClick={() => onEditButtonClick(district)}
-                                                />
-                                                <DeleteButton
-                                                    onClick={() => onDeleteButtonClick(district)}
-                                                />
-                                                {isLastRow && !openAddEditModal && (
-                                                    <AddButton onClick={()=>onAddButtonClick()} />
-                                                )}
+                                        <td className="px-3 py-2">
+                                            <div className="flex gap-2">
+                                                <EditButton onClick={() => onEditButtonClick(district)} />
+                                                <DeleteButton onClick={() => onDeleteButtonClick(district)} />
                                             </div>
                                         </td>
                                     </tr>
-                                    { isRowExpanded &&
-                                        <tr className="bg-gray-50">
-                                            <td colSpan={5} className="p-0 border-b border-gray-200">
-                                                <div className="w-full pl-12 pr-4 py-4 bg-gray-50/50 border-l-4 border-indigo-500">
-                                                    <MunicipalitiesTable districtInfo={district} />
-                                                </div>
+
+                                    {isExpanded && (
+                                        <tr className="animate-slideDown">
+                                            <td colSpan={4} className="pl-10 py-3 bg-blue-100/50">
+                                                <MunicipalitiesTable districtInfo={district} provinceName={props.provinceInfo.provinceName} />
                                             </td>
                                         </tr>
-                                    }
+                                    )}
                                 </>
-                                
                             );
                         })}
-
                         </tbody>
                     </table>
                 </div>
             </div>
+
             <AddEditModal
                 isOpen={openAddEditModal}
                 title={`${addEditDistrict?.provinceId? 'Edit' : 'Add'} District`}
@@ -174,6 +167,7 @@ const DistrictsTable = (props:DistrictsTableProps) => {
                 <div className="space-y-4">
                     <div>
                         <TextInput
+                            required={true}
                             label={'District Name'}
                             value={addEditDistrict?.districtName || ""}
                             onChange={(e) =>
@@ -187,6 +181,7 @@ const DistrictsTable = (props:DistrictsTableProps) => {
 
                     <div>
                         <TextInput
+                            required={true}
                             label={'District Code'}
                             value={addEditDistrict?.districtCode || ""}
                             onChange={(e) =>

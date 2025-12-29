@@ -1,4 +1,4 @@
-import type {User} from '../stores/authStore.ts'
+import type {User} from "../../../stores/authStore.ts";
 
 export const publicLinks = [
     { label: "Home", path: "/", icon: "🏠"},
@@ -11,7 +11,7 @@ export const privateLinks = [
 
 export const adminLinks = [
     { label: "Election Parties", path: "/election-parties", icon: "️🗳️" },
-    { label: "Voting Places", path: "/voting-places", icon: "️🗳️" },
+    { label: "Voting Places", path: "/voting-places", icon: "🏛️" },
 ];
 
 export const getUserNavbarLinks = (user: User | null) => {
